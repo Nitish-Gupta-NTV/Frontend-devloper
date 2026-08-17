@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+/*import { motion } from "framer-motion";
 import {
   
   MapPin,
@@ -741,10 +741,11 @@ function GlassLink({ href, icon, label }) {
 // Wire the components into the registry now that they're defined.
 THEME_REGISTRY[0].component = MinimalDarkTheme;
 THEME_REGISTRY[1].component = ModernLightTheme;
-THEME_REGISTRY[2].component = CreativeGradientTheme;
+THEME_REGISTRY[2].component = CreativeGradientTheme;*/
 
 
-/*import { motion } from "framer-motion";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import {
   MapPin,
   ExternalLink,
@@ -754,9 +755,10 @@ import {
   Award,
   Mail,
   Sparkles,
+  MessageCircle,
 } from "lucide-react";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
-//import { Github, Linkedin } from "react-icons/fa";
+import {FaGithub, FaLinkedin } from "react-icons/fa";
+//import ContactPage from "../pages/ContactPage";
 
 // ---------------------------------------------------------------------------
 // Shared helpers
@@ -848,14 +850,22 @@ export function MinimalDarkTheme({ data }) {
           <p className="font-mono text-sm text-[#4FD1C5] mb-4">$ whoami</p>
           <div className="flex items-start gap-5">
             {profileImage && (
-              <img src={profileImage} alt={name} className="w-16 h-16 rounded-full object-cover border border-[#1C2230] shrink-0" />
+              <div className="relative shrink-0">
+                <div className="absolute -inset-0.5 rounded-full bg-gradient-to-br from-[#E8B34A]/40 to-[#4FD1C5]/40 blur-sm" />
+                <img
+                  src={profileImage}
+                  alt={name}
+                  className="relative w-16 h-16 rounded-full object-cover border-2 border-[#0B0E14]"
+                  onError={(e) => (e.target.style.display = "none")}
+                />
+              </div>
             )}
             <div>
               <h1 className="font-mono text-3xl sm:text-4xl font-semibold tracking-tight">
                 {name}
                 <span className="text-[#E8B34A] animate-pulse">_</span>
               </h1>
-              <p className="text-[#9CA3AF] mt-2 text-lg">{headline}</p>
+              <p className="text-[#9CA3AF] mt-2 text-lg leading-relaxed">{headline}</p>
               {location && (
                 <p className="flex items-center gap-1.5 text-sm text-[#6B7280] mt-3">
                   <MapPin size={14} />
@@ -870,6 +880,13 @@ export function MinimalDarkTheme({ data }) {
             {social?.linkedine && <SocialLinkDark href={social.linkedine} icon={<FaLinkedin size={15} />} label="LinkedIn" />}
             {email && <SocialLinkDark href={`mailto:${email}`} icon={<Mail size={15} />} label="Email" />}
             {social?.codingp_platform && <SocialLinkDark href={social.codingp_platform} icon={<Code2 size={15} />} label="LeetCode" />}
+            <Link
+              to={`/p/${data.slug}/contact`}
+              className="flex items-center gap-1.5 font-mono text-xs px-3 py-1.5 rounded border border-[#E8B34A]/30 bg-[#E8B34A]/10 text-[#E8B34A] hover:bg-[#E8B34A]/20 transition-colors"
+            >
+              <MessageCircle size={15} />
+              Contact
+            </Link>
           </div>
         </motion.section>
 
@@ -902,36 +919,48 @@ export function MinimalDarkTheme({ data }) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4 }}
-                  className="border border-[#1C2230] rounded-lg p-5 bg-[#0E121B] hover:border-[#2A3244] transition-colors"
+                  className="group border border-[#1C2230] rounded-xl overflow-hidden bg-[#0E121B] hover:border-[#2A3244] hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all duration-300"
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="font-mono text-base font-medium flex items-center gap-2">
-                      {p.title}
-                      {p.featured && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#E8B34A]/10 text-[#E8B34A] font-sans">featured</span>
-                      )}
-                    </h3>
-                    <div className="flex gap-3 shrink-0">
-                      {p.githubUrl && (
-                        <a href={p.githubUrl} target="_blank" rel="noreferrer" className="text-[#6B7280] hover:text-[#4FD1C5]">
-                          <FaGithub size={16} />
-                        </a>
-                      )}
-                      {p.liveUrl && (
-                        <a href={p.liveUrl} target="_blank" rel="noreferrer" className="text-[#6B7280] hover:text-[#4FD1C5]">
-                          <ExternalLink size={16} />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                  <p className="text-sm text-[#9CA3AF] mt-2 leading-relaxed">{p.description}</p>
-                  {p.skilldto?.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {p.skilldto.map((s, i) => (
-                        <Pill key={i}>{s.skillsname}</Pill>
-                      ))}
+                  {p.imageUrl && (
+                    <div className="aspect-video overflow-hidden bg-[#0A0C10]">
+                      <img
+                        src={p.imageUrl}
+                        alt={p.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => (e.target.style.display = "none")}
+                      />
                     </div>
                   )}
+                  <div className="p-5">
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="font-mono text-base font-medium flex items-center gap-2">
+                        {p.title}
+                        {p.featured && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#E8B34A]/10 text-[#E8B34A] font-sans">featured</span>
+                        )}
+                      </h3>
+                      <div className="flex gap-3 shrink-0">
+                        {p.githubUrl && (
+                          <a href={p.githubUrl} target="_blank" rel="noreferrer" className="text-[#6B7280] hover:text-[#4FD1C5]">
+                            <FaGithub size={16} />
+                          </a>
+                        )}
+                        {p.liveUrl && (
+                          <a href={p.liveUrl} target="_blank" rel="noreferrer" className="text-[#6B7280] hover:text-[#4FD1C5]">
+                            <ExternalLink size={16} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-sm text-[#9CA3AF] mt-2 leading-relaxed">{p.description}</p>
+                    {p.skilldto?.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {p.skilldto.map((s, i) => (
+                          <Pill key={i}>{s.skillsname}</Pill>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -1066,6 +1095,12 @@ export function ModernLightTheme({ data }) {
                 LinkedIn
               </a>
             )}
+            <Link
+              to={`/p/${data.slug}/contact`}
+              className="px-3 py-1.5 rounded-lg bg-[#4F46E5] text-white text-xs font-medium hover:bg-[#4338CA] transition-colors"
+            >
+              Contact
+            </Link>
           </div>
         </div>
       </div>
@@ -1073,7 +1108,12 @@ export function ModernLightTheme({ data }) {
       <div className="max-w-4xl mx-auto px-6 py-16">
         <section className="mb-16 flex items-start gap-6">
           {profileImage && (
-            <img src={profileImage} alt={name} className="w-20 h-20 rounded-2xl object-cover shrink-0 shadow-sm" />
+            <img
+              src={profileImage}
+              alt={name}
+              className="w-20 h-20 rounded-2xl object-cover shrink-0 shadow-md ring-1 ring-black/5"
+              onError={(e) => (e.target.style.display = "none")}
+            />
           )}
           <div>
             <h1 className="font-['Sora'] text-3xl sm:text-4xl font-bold tracking-tight text-[#0F172A]">{name}</h1>
@@ -1114,7 +1154,7 @@ export function ModernLightTheme({ data }) {
             <div className="border-l-2 border-[#E2E8F0] pl-6 space-y-8">
               {projects.map((p, i) => (
                 <div key={p.id} className="relative">
-                  <span className="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-[#4F46E5]" />
+                  <span className="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-[#4F46E5] ring-4 ring-[#F7F9FC]" />
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-mono text-xs px-2 py-0.5 rounded bg-[#EEF2FF] text-[#4F46E5] font-medium">
                       {versionTag(i, projects.length)}
@@ -1124,7 +1164,17 @@ export function ModernLightTheme({ data }) {
                       <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#0D9488]/10 text-[#0D9488] font-medium">featured</span>
                     )}
                   </div>
-                  <p className="text-sm text-[#475569] mt-2 leading-relaxed">{p.description}</p>
+                  {p.imageUrl && (
+                    <div className="rounded-xl overflow-hidden mt-3 border border-[#E2E8F0] shadow-sm">
+                      <img
+                        src={p.imageUrl}
+                        alt={p.title}
+                        className="w-full aspect-video object-cover"
+                        onError={(e) => (e.target.style.display = "none")}
+                      />
+                    </div>
+                  )}
+                  <p className="text-sm text-[#475569] mt-3 leading-relaxed">{p.description}</p>
                   {p.skilldto?.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
                       {p.skilldto.map((s, si) => (
@@ -1249,7 +1299,15 @@ export function CreativeGradientTheme({ data }) {
         <div className="relative max-w-3xl mx-auto px-6 pt-24 pb-20">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             {profileImage && (
-              <img src={profileImage} alt={name} className="w-20 h-20 rounded-full object-cover border-2 border-white/30 mb-6" />
+              <div className="relative w-20 h-20 mb-6">
+                <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-[#7C3AED] via-[#EC4899] to-[#F97316] opacity-60 blur-md" />
+                <img
+                  src={profileImage}
+                  alt={name}
+                  className="relative w-20 h-20 rounded-full object-cover border-2 border-white/40 shadow-2xl"
+                  onError={(e) => (e.target.style.display = "none")}
+                />
+              </div>
             )}
             <h1 className="font-['Space_Grotesk'] text-5xl sm:text-6xl font-bold leading-[1.05] tracking-tight">{name}</h1>
             <p className="text-xl text-white/80 mt-3">{headline}</p>
@@ -1266,6 +1324,13 @@ export function CreativeGradientTheme({ data }) {
               {social?.linkedine && <GlassLink href={social.linkedine} icon={<FaLinkedin size={15} />} label="LinkedIn" />}
               {email && <GlassLink href={`mailto:${email}`} icon={<Mail size={15} />} label="Email" />}
               {social?.codingp_platform && <GlassLink href={social.codingp_platform} icon={<Code2 size={15} />} label="LeetCode" />}
+              <Link
+                to={`/p/${data.slug}/contact`}
+                className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-full bg-gradient-to-r from-[#7C3AED] to-[#EC4899] font-medium hover:opacity-90 transition-opacity"
+              >
+                <MessageCircle size={15} />
+                Contact
+              </Link>
             </div>
           </motion.div>
         </div>
@@ -1311,41 +1376,53 @@ export function CreativeGradientTheme({ data }) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: i * 0.05 }}
-                  className="rounded-2xl p-5 bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors"
+                  className="rounded-2xl overflow-hidden bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-['Space_Grotesk'] font-semibold">{p.title}</h3>
-                    {p.featured && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-[#7C3AED] to-[#EC4899] font-medium">
-                        featured
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-white/70 mt-2 leading-relaxed">{p.description}</p>
-                  {p.skilldto?.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {p.skilldto.map((s, si) => (
-                        <span
-                          key={si}
-                          className="text-xs px-2.5 py-1 rounded-full font-medium"
-                          style={{ backgroundColor: `${badgeColors[si % badgeColors.length]}30`, color: badgeColors[si % badgeColors.length] }}
-                        >
-                          {s.skillsname}
-                        </span>
-                      ))}
+                  {p.imageUrl && (
+                    <div className="aspect-video overflow-hidden">
+                      <img
+                        src={p.imageUrl}
+                        alt={p.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => (e.target.style.display = "none")}
+                      />
                     </div>
                   )}
-                  <div className="flex gap-4 mt-4 text-sm">
-                    {p.githubUrl && (
-                      <a href={p.githubUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-white/70 hover:text-white">
-                        <FaGithub size={14} /> Code
-                      </a>
+                  <div className="p-5">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-['Space_Grotesk'] font-semibold">{p.title}</h3>
+                      {p.featured && (
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-[#7C3AED] to-[#EC4899] font-medium">
+                          featured
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-white/70 mt-2 leading-relaxed">{p.description}</p>
+                    {p.skilldto?.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {p.skilldto.map((s, si) => (
+                          <span
+                            key={si}
+                            className="text-xs px-2.5 py-1 rounded-full font-medium"
+                            style={{ backgroundColor: `${badgeColors[si % badgeColors.length]}30`, color: badgeColors[si % badgeColors.length] }}
+                          >
+                            {s.skillsname}
+                          </span>
+                        ))}
+                      </div>
                     )}
-                    {p.liveUrl && (
-                      <a href={p.liveUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-white/70 hover:text-white">
-                        <ExternalLink size={14} /> Live
-                      </a>
-                    )}
+                    <div className="flex gap-4 mt-4 text-sm">
+                      {p.githubUrl && (
+                        <a href={p.githubUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-white/70 hover:text-white">
+                          <FaGithub size={14} /> Code
+                        </a>
+                      )}
+                      {p.liveUrl && (
+                        <a href={p.liveUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-white/70 hover:text-white">
+                          <ExternalLink size={14} /> Live
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -1433,4 +1510,4 @@ function GlassLink({ href, icon, label }) {
 // Wire the components into the registry now that they're defined.
 THEME_REGISTRY[0].component = MinimalDarkTheme;
 THEME_REGISTRY[1].component = ModernLightTheme;
-THEME_REGISTRY[2].component = CreativeGradientTheme;*/
+THEME_REGISTRY[2].component = CreativeGradientTheme;

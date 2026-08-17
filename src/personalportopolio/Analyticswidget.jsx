@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Eye, Clock } from "lucide-react";
 import axiosClient from "../api/axiosClient"; // adjust path to match your project structure
 
-const POLL_INTERVAL_MS = 5000;
+const POLL_INTERVAL_MS = 5000000;
 
 function timeAgo(dateStr) {
   if (!dateStr) return "No views yet";

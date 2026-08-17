@@ -398,7 +398,7 @@ export default function EducationStep({ stepNumber, totalSteps }) {
                 <input
                   type="number"
                   min="1950"
-                  max="2100"
+                  max="2026"
                   disabled={ongoing}
                   placeholder={
                     ongoing

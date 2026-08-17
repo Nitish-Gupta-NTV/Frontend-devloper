@@ -2,8 +2,8 @@ import axios from "axios";
 import { useAuthStore } from "../context/authStore";
  
 
-//const BASE_URL = "http://localhost:8080";
-const BASE_URL =import.meta.env.VITE_BASE_URL;
+//const BASE_URL = "http://10.235.136.47:8080";
+const BASE_URL ="http://localhost:8080";
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -13,9 +13,12 @@ const apiClient = axios.create({
 // Attach the access token to every outgoing request.
 apiClient.interceptors.request.use((config) => {
   const { accessToken } = useAuthStore.getState();
+  console.log("ACCESS TOKEN:", accessToken);
+  console.log("REQUEST:", config.url);
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
+   console.log("AUTH HEADER:", config.headers.Authorization);
   return config;
 });
 
@@ -39,7 +42,7 @@ apiClient.interceptors.response.use(
     const status = error.response?.status;
 
     // Don't try to refresh on the refresh call itself, or if we've already retried.
-    if (status !== 401 || originalRequest._retry || originalRequest.url?.includes("/api/auth/refresh")) {
+    if (![401,403].includes(status) || originalRequest._retry || originalRequest.url?.includes("/api/auth/refresh")) {
       return Promise.reject(error);
     }
 
@@ -67,7 +70,7 @@ apiClient.interceptors.response.use(
     try {
       // Adjust the payload/response shape to match your backend's actual
       // /api/auth/refresh contract.
-      const { data } = await axios.post(`${BASE_URL}/api/auth/refresh`, { refreshToken });
+      const { data } = await axios.post(`${BASE_URL}/api/auth/refresh-token`, { refreshToken });
 
       setAuth({
         user,

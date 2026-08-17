@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../context/authStore";
-
+//import { useEffect, useState } from "react";
+import axiosClient from "../../api/axiosClient"; 
+//import toast from "react-hot-toast";
 export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
+  const [error,setError]=useState(null);
   const menuRef = useRef(null);
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
@@ -19,14 +22,30 @@ export default function ProfileDropdown() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
-    clearAuth();
-    navigate("/login");
-  };
+  const handleLogout = async () => {
+  try {
+    const res = await axiosClient.post("/api/logout");
 
+    if (res.status >= 200 && res.status < 300) {
+      clearAuth();
+      navigate("/login");
+
+      toast.success(res.data?.message || "Logout successfully");
+    }
+  } catch (error) {
+    console.log("STATUS:", error.response?.status);
+  console.log("DATA:", error.response?.data);
+  console.log("HEADERS:", error.response?.headers);
+    toast.error(
+      error.response?.data?.message || "Logout failed. Please try again."
+    );
+  }
+};
+        
   const initials = user?.name
     ? user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
     : "U";
+   
 
   return (
     <div className="relative" ref={menuRef}>

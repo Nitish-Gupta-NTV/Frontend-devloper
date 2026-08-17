@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import DashboardNavbar from "../components/dashboard/DashboardNavbar";
 import { useAuthStore } from "../context/authStore";
+
 import { usePortfolioWizardStore, STEP_LABELS } from "../store/portfolioWizardStore";
 
 const QUICK_LINKS = [
@@ -31,6 +32,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#0A0C10] font-sans">
       <DashboardNavbar />
+      
 
       <main className="mx-auto max-w-5xl px-6 py-12">
         <h1 className="font-mono text-2xl font-bold text-[#E8EAED]">

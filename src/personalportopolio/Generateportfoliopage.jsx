@@ -6,6 +6,7 @@ import axiosClient from "../api/axiosClient"; // adjust path to match your proje
 import { THEME_REGISTRY, THEME_KEYS } from "../themes/Portfoliothemes.jsx";
 import SlugEditor from "./SlugEditor";
 
+
 export default function GeneratePortfolioPage() {
   const [portfolio, setPortfolio] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,11 +20,19 @@ export default function GeneratePortfolioPage() {
     axiosClient
       .get("api/responces/see")
       .then((res) => {
+        consloe.log("backend sucess",res.status);
+        console.log("data",res.data);
         setPortfolio(res.data);
         // Pre-select whatever theme is already saved, else default
         setSelectedKey(res.data?.theme?.layout_type || THEME_KEYS.MINIMAL_DARK);
       })
-      .catch(() => setError("Could not load your portfolio. Make sure you've filled in your basic info first."))
+      .catch((err) => 
+     {
+      console.log("backend error"+err);
+      console.log("requested url"+err.config?.url);
+      console.log("baseurl"+err.config?.baseUrl);
+       setError("Could not load your portfolio. Make sure you've filled in your basic info first.")}
+    )
       .finally(() => setLoading(false));
   }, []);
 
@@ -216,6 +225,7 @@ import axiosClient from "../api/axiosClient"; // adjust path to match your proje
 //import { THEME_REGISTRY, THEME_KEYS } from "../themes/PortfolioThemes";
 import { THEME_REGISTRY, THEME_KEYS } from "../themes/Portfoliothemes.jsx";
 import AnalyticsWidget from "./Analyticswidget";
+import SlugEditor from "./SlugEditor";
 export default function GeneratePortfolioPage() {
   const [portfolio, setPortfolio] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -319,6 +329,17 @@ export default function GeneratePortfolioPage() {
   <ExternalLink size={14} />
   View Resume
 </a>
+<div className="mb-8">
+  <SlugEditor
+    currentSlug={portfolio.slug}
+    onSaved={(newSlug) => {
+      setPortfolio((prev) => ({
+        ...prev,
+        slug: newSlug,
+      }));
+    }}
+  />
+</div>
 
 <div className="grid lg:grid-cols-[280px_1fr] gap-8"></div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
